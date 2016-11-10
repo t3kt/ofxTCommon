@@ -6,6 +6,7 @@
 
 #include <ofJson.h>
 #include <string>
+#include <type_traits>
 #include "ofxTEnums.h"
 
 namespace ofxTCommon {
@@ -54,6 +55,12 @@ namespace ofxTCommon {
       return value;
     }
 
+    template<typename T,
+    typename std::enable_if<std::is_base_of<JsonWritable, T>::value, T>::type>
+    ofJson toJson(const T& value) {
+      return value.toJson();
+    }
+
     template<typename T, typename Iter>
     ofJson toJsonArray(Iter begin, Iter end) {
       auto arr = ofJson::array();
@@ -74,6 +81,14 @@ namespace ofxTCommon {
     template<typename T>
     T fromJson(const ofJson& value) {
       return value;
+    }
+
+    template<typename T,
+    typename std::enable_if<std::is_default_constructible<T>::value && std::is_base_of<JsonWritable, T>::value, T>::type>
+    T fromJson(const ofJson& value) {
+      T result;
+      result.readJson(value);
+      return result;
     }
 
     template<typename T>
