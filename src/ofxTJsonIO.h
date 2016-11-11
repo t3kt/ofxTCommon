@@ -5,6 +5,7 @@
 #pragma once
 
 #include <ofJson.h>
+#include <ofTypes.h>
 #include <string>
 #include <type_traits>
 #include "ofxTEnums.h"
@@ -34,8 +35,14 @@ namespace ofxTCommon {
   };
 
   namespace JsonUtil {
+    void writeJsonToFile(const std::string& filepath,
+                         const ofJson& val);
+
     void assertHasType(const ofJson& val, ofJson::value_t type);
     void assertHasLength(const ofJson& val, ofJson::size_type length);
+    void assertIsArray(const ofJson& val);
+    void assertIsArray(const ofJson& val, ofJson::size_type length);
+    void assertIsObject(const ofJson& val);
 
 //    template<typename T>
 //    ofJson::value_t valueType();
@@ -54,6 +61,15 @@ namespace ofxTCommon {
     ofJson toJson(const T& value) {
       return value;
     }
+
+    template<>
+    ofJson toJson(const ofVec2f& value);
+
+    template<>
+    ofJson toJson(const ofVec3f& value);
+
+    template<>
+    ofJson toJson(const ofFloatColor& value);
 
     template<typename T,
     typename std::enable_if<std::is_base_of<JsonWritable, T>::value, T>::type>
@@ -82,6 +98,15 @@ namespace ofxTCommon {
     T fromJson(const ofJson& value) {
       return value;
     }
+
+    template<>
+    ofVec2f fromJson<ofVec2f>(const ofJson& value);
+
+    template<>
+    ofVec3f fromJson<ofVec3f>(const ofJson& value);
+
+    template<>
+    ofFloatColor fromJson<ofFloatColor>(const ofJson& value);
 
     template<typename T,
     typename std::enable_if<std::is_default_constructible<T>::value && std::is_base_of<JsonWritable, T>::value, T>::type>

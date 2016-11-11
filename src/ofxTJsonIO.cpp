@@ -6,10 +6,15 @@
 
 #include <ofLog.h>
 #include <ofUtils.h>
-#include <ofTypes.h>
 #include <stdexcept>
 
 using namespace ofxTCommon;
+
+void JsonUtil::writeJsonToFile(const std::string &filepath,
+                               const ofJson &val) {
+  ofFile file(filepath, ofFile::WriteOnly);
+  file << val.dump(2);
+}
 
 void JsonReadable::readFromFile(std::string filepath) {
   ofJson obj = ofLoadJson(filepath);
@@ -27,7 +32,7 @@ void JsonWritable::writeJsonTo(std::ostream &os) const {
 
 void JsonWritable::writeJsonTo(std::string filepath) const {
   auto obj = toJson();
-  ofSavePrettyJson(filepath, obj);
+  JsonUtil::writeJsonToFile(filepath, obj);
 }
 
 
@@ -48,6 +53,20 @@ void JsonUtil::assertHasLength(const ofJson &val, ofJson::size_type length) {
   }
 }
 
+void JsonUtil::assertIsObject(const ofJson &val) {
+  JsonUtil::assertHasType(val, ofJson::value_t::object);
+}
+
+void JsonUtil::assertIsArray(const ofJson &val) {
+  JsonUtil::assertHasType(val, ofJson::value_t::array);
+}
+
+void JsonUtil::assertIsArray(const ofJson &val,
+                             ofJson::size_type length) {
+  JsonUtil::assertIsArray(val);
+  JsonUtil::assertHasLength(val, length);
+}
+
 template<>
 ofJson JsonUtil::toJson(const ofVec2f& value) {
   return {value.x, value.y};
@@ -61,6 +80,24 @@ ofJson JsonUtil::toJson(const ofVec3f& value) {
 template<>
 ofJson JsonUtil::toJson(const ofFloatColor& value) {
   return {value.r, value.g, value.b, value.a};
+}
+
+template<>
+ofVec2f JsonUtil::fromJson<ofVec2f>(const ofJson& value) {
+  JsonUtil::assertIsArray(value, 2);
+  return ofVec2f(value[0], value[1]);
+}
+
+template<>
+ofVec3f JsonUtil::fromJson<ofVec3f>(const ofJson& value) {
+  JsonUtil::assertIsArray(value, 3);
+  return ofVec3f(value[0], value[1], value[2]);
+}
+
+template<>
+ofFloatColor JsonUtil::fromJson<ofFloatColor>(const ofJson& value) {
+  JsonUtil::assertIsArray(value, 4);
+  return ofFloatColor(value[0], value[1], value[2], value[3]);
 }
 
 void JsonUtil::mergeInto(ofJson &targetObj, const ofJson &sourceObj) {
