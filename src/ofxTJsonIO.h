@@ -5,6 +5,7 @@
 #pragma once
 
 #include <ofJson.h>
+#include <ofRectangle.h>
 #include <ofTypes.h>
 #include <string>
 #include <type_traits>
@@ -86,6 +87,9 @@ namespace ofxTCommon {
     template<>
     ofJson toJson(const ofMatrix4x4& value);
 
+    template<>
+    ofJson toJson(const ofRectangle& value);
+
     template<typename T,
     typename std::enable_if<std::is_base_of<JsonWritable, T>::value, T>::type>
     ofJson toJson(const T& value) {
@@ -137,6 +141,9 @@ namespace ofxTCommon {
 
     template<>
     ofFloatColor fromJson<ofFloatColor>(const ofJson& value);
+
+    template<>
+    ofRectangle fromJson<ofRectangle>(const ofJson& value);
 
     template<typename T,
     typename std::enable_if<std::is_default_constructible<T>::value && std::is_base_of<JsonWritable, T>::value, T>::type>

@@ -113,6 +113,16 @@ ofJson JsonUtil::toJson(const ofMatrix4x4& value) {
 }
 
 template<>
+ofJson JsonUtil::toJson(const ofRectangle& value) {
+  return {
+    {"x", value.getX()},
+    {"y", value.getY()},
+    {"w", value.getWidth()},
+    {"h", value.getHeight()},
+  };
+}
+
+template<>
 ofVec2f JsonUtil::fromJson<ofVec2f>(const ofJson& value) {
   JsonUtil::assertIsArray(value, 2);
   return ofVec2f(value[0], value[1]);
@@ -162,6 +172,15 @@ template<>
 ofFloatColor JsonUtil::fromJson<ofFloatColor>(const ofJson& value) {
   JsonUtil::assertIsArray(value, 4);
   return ofFloatColor(value[0], value[1], value[2], value[3]);
+}
+
+template<>
+ofRectangle JsonUtil::fromJson<ofRectangle>(const ofJson& value) {
+  JsonUtil::assertIsObject(value);
+  return ofRectangle(JsonUtil::fromJson<float>(value["x"]),
+                     JsonUtil::fromJson<float>(value["y"]),
+                     JsonUtil::fromJson<float>(value["w"]),
+                     JsonUtil::fromJson<float>(value["h"]));
 }
 
 void JsonUtil::mergeInto(ofJson &targetObj, const ofJson &sourceObj) {
