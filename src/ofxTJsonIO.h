@@ -138,6 +138,9 @@ namespace ofxTCommon {
     T fromJsonField(const ofJson& obj,
                     const std::string& key,
                     const T& defaultValue) {
+      if (obj.find(key) == obj.end()) {
+        return defaultValue;
+      }
       ofJson val = obj[key];
       if (val.is_null()) {
         return defaultValue;
