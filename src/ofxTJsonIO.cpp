@@ -78,8 +78,38 @@ ofJson JsonUtil::toJson(const ofVec3f& value) {
 }
 
 template<>
+ofJson JsonUtil::toJson(const ofVec4f& value) {
+  return {value.x, value.y, value.z, value.w};
+}
+
+template<>
+ofJson JsonUtil::toJson(const glm::vec2& value) {
+  return {value.x, value.y};
+}
+
+template<>
+ofJson JsonUtil::toJson(const glm::vec3& value) {
+  return {value.x, value.y, value.z};
+}
+
+template<>
+ofJson JsonUtil::toJson(const glm::vec4& value) {
+  return {value.x, value.y, value.z, value.w};
+}
+
+template<>
 ofJson JsonUtil::toJson(const ofFloatColor& value) {
   return {value.r, value.g, value.b, value.a};
+}
+
+template<>
+ofJson JsonUtil::toJson(const ofMatrix4x4& value) {
+  return {
+    JsonUtil::toJson(value.getRowAsVec4f(0)),
+    JsonUtil::toJson(value.getRowAsVec4f(1)),
+    JsonUtil::toJson(value.getRowAsVec4f(2)),
+    JsonUtil::toJson(value.getRowAsVec4f(3)),
+  };
 }
 
 template<>
@@ -92,6 +122,40 @@ template<>
 ofVec3f JsonUtil::fromJson<ofVec3f>(const ofJson& value) {
   JsonUtil::assertIsArray(value, 3);
   return ofVec3f(value[0], value[1], value[2]);
+}
+
+template<>
+ofVec4f JsonUtil::fromJson<ofVec4f>(const ofJson& value) {
+  JsonUtil::assertIsArray(value, 4);
+  return ofVec4f(value[0], value[1], value[2], value[3]);
+}
+
+template<>
+glm::vec2 JsonUtil::fromJson<glm::vec2>(const ofJson& value) {
+  return JsonUtil::fromJson<ofVec2f>(value);
+}
+
+template<>
+glm::vec3 JsonUtil::fromJson<glm::vec3>(const ofJson& value) {
+  return JsonUtil::fromJson<ofVec3f>(value);
+}
+
+template<>
+glm::vec4 JsonUtil::fromJson<glm::vec4>(const ofJson& value) {
+  return JsonUtil::fromJson<ofVec4f>(value);
+}
+
+template<>
+ofMatrix4x4 JsonUtil::fromJson<ofMatrix4x4>(const ofJson& value) {
+  JsonUtil::assertIsArray(value, 4);
+  auto row0 = JsonUtil::fromJson<ofVec4f>(value[0]);
+  auto row1 = JsonUtil::fromJson<ofVec4f>(value[1]);
+  auto row2 = JsonUtil::fromJson<ofVec4f>(value[2]);
+  auto row3 = JsonUtil::fromJson<ofVec4f>(value[3]);
+  return ofMatrix4x4(row0.x, row0.y, row0.z, row0.w,
+                     row1.x, row1.y, row1.z, row1.w,
+                     row2.x, row2.y, row2.z, row2.w,
+                     row3.x, row3.y, row3.z, row3.w);
 }
 
 template<>

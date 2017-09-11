@@ -69,7 +69,22 @@ namespace ofxTCommon {
     ofJson toJson(const ofVec3f& value);
 
     template<>
+    ofJson toJson(const ofVec4f& value);
+
+    template<>
+    ofJson toJson(const glm::vec2& value);
+
+    template<>
+    ofJson toJson(const glm::vec3& value);
+
+    template<>
+    ofJson toJson(const glm::vec4& value);
+
+    template<>
     ofJson toJson(const ofFloatColor& value);
+
+    template<>
+    ofJson toJson(const ofMatrix4x4& value);
 
     template<typename T,
     typename std::enable_if<std::is_base_of<JsonWritable, T>::value, T>::type>
@@ -104,6 +119,21 @@ namespace ofxTCommon {
 
     template<>
     ofVec3f fromJson<ofVec3f>(const ofJson& value);
+
+    template<>
+    ofVec4f fromJson<ofVec4f>(const ofJson& value);
+
+    template<>
+    glm::vec2 fromJson<glm::vec2>(const ofJson& value);
+
+    template<>
+    glm::vec3 fromJson<glm::vec3>(const ofJson& value);
+
+    template<>
+    glm::vec4 fromJson<glm::vec4>(const ofJson& value);
+
+    template<>
+    ofMatrix4x4 fromJson<ofMatrix4x4>(const ofJson& value);
 
     template<>
     ofFloatColor fromJson<ofFloatColor>(const ofJson& value);
