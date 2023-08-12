@@ -4,6 +4,7 @@
 //
 
 #include <cmath>
+#include <ofGraphics.h>
 #include <ofMath.h>
 #include <ofTypes.h>
 #include <ofVec2f.h>

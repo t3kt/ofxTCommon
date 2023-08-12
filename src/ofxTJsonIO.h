@@ -7,6 +7,7 @@
 #include <ofJson.h>
 #include <ofRectangle.h>
 #include <ofTypes.h>
+#include <ofMatrix4x4.h>
 #include <string>
 #include <type_traits>
 #include "ofxTEnums.h"
